@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scripts/player_controller.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/mobile_controls.gd" id="2_mobile"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/training_target.gd" id="4_target"]
 [ext_resource type="Script" path="res://scripts/player_health.gd" id="5_health"]
 [ext_resource type="Script" path="res://scripts/training_bot.gd" id="6_bot"]
+[ext_resource type="Script" path="res://scripts/weapon_viewmodel.gd" id="7_viewmodel"]
 
 [sub_resource type="Environment" id="Environment_world"]
 background_mode = 1
@@ -78,6 +79,10 @@ current = true
 
 [node name="WeaponController" type="Node" parent="Player/CameraPivot/Camera3D"]
 script = ExtResource("3_weapon")
+
+[node name="WeaponViewModel" type="Node3D" parent="Player/CameraPivot/Camera3D"]
+position = Vector3(0, 0, 0)
+script = ExtResource("7_viewmodel")
 
 [node name="MobileControls" type="CanvasLayer" parent="."]
 layer = 10

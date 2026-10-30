@@ -15,9 +15,15 @@ class_name VeltrixPlayerController
 @export var crouching_camera_height: float = 1.05
 
 @onready var camera_pivot: Node3D = $CameraPivot
+@onready var torso_visual: MeshInstance3D = $TorsoVisual
+@onready var left_leg_visual: MeshInstance3D = $LeftLegVisual
+@onready var right_leg_visual: MeshInstance3D = $RightLegVisual
+@onready var left_boot_visual: MeshInstance3D = $LeftBootVisual
+@onready var right_boot_visual: MeshInstance3D = $RightBootVisual
 @onready var mobile_controls: VeltrixMobileControls = get_node_or_null("../MobileControls/TouchControls")
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
+var walk_cycle: float = 0.0
 
 func _ready() -> void:
 	if not OS.has_feature("mobile") and not OS.has_feature("android") and not OS.has_feature("ios"):
@@ -81,3 +87,24 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0.0, active_speed)
 
 	move_and_slide()
+	_animate_full_body(delta, crouching)
+
+func _animate_full_body(delta: float, crouching: bool) -> void:
+	var horizontal_speed := Vector2(velocity.x, velocity.z).length()
+	var movement_amount := clampf(horizontal_speed / sprint_speed, 0.0, 1.0)
+	if movement_amount > 0.05:
+		walk_cycle += delta * lerpf(6.5, 11.0, movement_amount)
+	else:
+		walk_cycle = move_toward(walk_cycle, 0.0, delta * 5.0)
+	var swing := sin(walk_cycle) * 0.34 * movement_amount
+	var bob := absf(cos(walk_cycle)) * 0.035 * movement_amount
+	left_leg_visual.position.y = -0.67 + swing * 0.18
+	right_leg_visual.position.y = -0.67 - swing * 0.18
+	left_leg_visual.rotation.x = swing
+	right_leg_visual.rotation.x = -swing
+	left_boot_visual.position.y = -0.92 + swing * 0.18
+	right_boot_visual.position.y = -0.92 - swing * 0.18
+	left_boot_visual.rotation.x = swing * 0.8
+	right_boot_visual.rotation.x = -swing * 0.8
+	torso_visual.position.y = -0.22 + bob - (0.08 if crouching else 0.0)
+	torso_visual.rotation.z = sin(walk_cycle * 0.5) * 0.025 * movement_amount

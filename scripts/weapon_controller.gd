@@ -44,8 +44,8 @@ func fire_weapon() -> void:
 	var origin := camera.global_position
 	var destination := origin + (-camera.global_transform.basis.z * range_meters)
 	var query := PhysicsRayQueryParameters3D.create(origin, destination)
-	query.exclude = [camera.get_parent().get_parent()]
-	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	query.exclude = [camera.get_parent().get_parent().get_rid()]
+	var hit := camera.get_world_3d().direct_space_state.intersect_ray(query)
 	if not hit.is_empty():
 		var target: Object = hit.get("collider")
 		if target != null and target.has_method("take_damage"):

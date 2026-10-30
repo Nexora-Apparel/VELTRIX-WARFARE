@@ -81,7 +81,11 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build dist
-          "$GODOT_BIN" --headless --path . --export-debug Android build/veltrix-warfare-debug.apk
+          echo "=== Android export environment ==="
+          cat "$HOME/.config/godot/editor_settings-4.tres"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --list_installed | tail -40
+          echo "=== Godot verbose Android export ==="
+          "$GODOT_BIN" --headless --verbose --path . --export-debug Android build/veltrix-warfare-debug.apk
           test -s build/veltrix-warfare-debug.apk
           test "$(stat -c%s build/veltrix-warfare-debug.apk)" -gt 1000000
           cp build/veltrix-warfare-debug.apk dist/veltrix-warfare-android-debug.apk

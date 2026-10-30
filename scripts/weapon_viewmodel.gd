@@ -1,63 +1,64 @@
 extends Node3D
 class_name VeltrixWeaponViewModel
 
-## Original low-poly first-person rifle and gloved forearms.
-## Procedural primitives keep the prototype self-contained and lightweight.
+## Original compact service-pistol viewmodel with two supporting gloved hands.
 
-var _time: float = 0.0
-var _base_position := Vector3(0.0, 0.0, 0.0)
+var _time := 0.0
+var _base_position := Vector3.ZERO
 
 func _ready() -> void:
 	_base_position = position
-	_build_viewmodel()
+	_build_pistol()
 
 func _process(delta: float) -> void:
 	_time += delta
-	position = _base_position + Vector3(0.0, sin(_time * 2.2) * 0.003, 0.0)
+	position = _base_position + Vector3(0.0, sin(_time * 2.2) * 0.0025, 0.0)
 
-func _build_viewmodel() -> void:
-	var rifle := _material(Color(0.12, 0.15, 0.17))
-	var metal := _material(Color(0.24, 0.27, 0.29))
-	var glove := _material(Color(0.10, 0.13, 0.12))
-	var accent := _material(Color(0.32, 0.35, 0.28))
+func _material(color: Color, metallic: float = 0.0) -> StandardMaterial3D:
+	var m := StandardMaterial3D.new()
+	m.albedo_color = color
+	m.metallic = metallic
+	m.roughness = 0.68
+	return m
 
-	_add_box("Receiver", Vector3(0.02, -0.22, -0.61), Vector3(0.19, 0.17, 0.55), rifle)
-	_add_box("Handguard", Vector3(0.02, -0.20, -0.91), Vector3(0.16, 0.14, 0.34), accent)
-	_add_box("Barrel", Vector3(0.02, -0.19, -1.16), Vector3(0.055, 0.055, 0.34), metal)
-	_add_box("Stock", Vector3(0.02, -0.23, -0.27), Vector3(0.15, 0.13, 0.25), rifle)
-	_add_box("Magazine", Vector3(0.02, -0.37, -0.62), Vector3(0.11, 0.22, 0.15), metal)
-	_add_box("Grip", Vector3(0.10, -0.37, -0.46), Vector3(0.09, 0.20, 0.10), rifle)
-	_add_box("Sight", Vector3(0.02, -0.11, -0.70), Vector3(0.07, 0.055, 0.12), metal)
-
-	_add_forearm("LeftForearm", Vector3(-0.22, -0.34, -0.43), Vector3(-0.19, -0.27, -0.76), glove)
-	_add_forearm("RightForearm", Vector3(0.28, -0.37, -0.30), Vector3(0.13, -0.27, -0.59), glove)
-
-func _material(color: Color) -> StandardMaterial3D:
-	var material := StandardMaterial3D.new()
-	material.albedo_color = color
-	material.metallic = 0.25
-	material.roughness = 0.72
-	return material
-
-func _add_box(node_name: String, local_position: Vector3, dimensions: Vector3, material: Material) -> void:
-	var mesh_instance := MeshInstance3D.new()
-	mesh_instance.name = node_name
+func _box(label: String, pos: Vector3, size: Vector3, material: Material) -> void:
+	var node := MeshInstance3D.new()
+	node.name = label
 	var mesh := BoxMesh.new()
-	mesh.size = dimensions
-	mesh_instance.mesh = mesh
-	mesh_instance.material_override = material
-	mesh_instance.position = local_position
-	add_child(mesh_instance)
+	mesh.size = size
+	node.mesh = mesh
+	node.position = pos
+	node.material_override = material
+	add_child(node)
 
-func _add_forearm(node_name: String, start: Vector3, finish: Vector3, material: Material) -> void:
-	var arm := MeshInstance3D.new()
-	arm.name = node_name
+func _capsule(label: String, pos: Vector3, radius: float, height: float, material: Material) -> void:
+	var node := MeshInstance3D.new()
+	node.name = label
 	var mesh := CapsuleMesh.new()
-	mesh.radius = 0.085
-	mesh.height = 0.52
-	arm.mesh = mesh
-	arm.material_override = material
-	arm.position = (start + finish) * 0.5
-	arm.look_at(arm.position + (finish - start).normalized(), Vector3.UP)
-	arm.rotate_object_local(Vector3.RIGHT, deg_to_rad(90.0))
-	add_child(arm)
+	mesh.radius = radius
+	mesh.height = height
+	node.mesh = mesh
+	node.position = pos
+	node.material_override = material
+	add_child(node)
+
+func _build_pistol() -> void:
+	var slide := _material(Color(0.105, 0.12, 0.13), 0.72)
+	var frame := _material(Color(0.055, 0.065, 0.07))
+	var metal := _material(Color(0.27, 0.29, 0.29), 0.82)
+	var glove := _material(Color(0.09, 0.12, 0.105))
+	var cuff := _material(Color(0.17, 0.20, 0.16))
+	# Pistol points along camera forward (-Z), centered in the lower-right view.
+	_box("PistolSlide", Vector3(0.22, -0.235, -0.66), Vector3(0.13, 0.115, 0.34), slide)
+	_box("PistolFrame", Vector3(0.22, -0.295, -0.65), Vector3(0.12, 0.07, 0.28), frame)
+	_box("PistolBarrel", Vector3(0.22, -0.225, -0.84), Vector3(0.055, 0.055, 0.12), metal)
+	_box("PistolMuzzle", Vector3(0.22, -0.225, -0.91), Vector3(0.075, 0.07, 0.025), frame)
+	_box("PistolGrip", Vector3(0.22, -0.405, -0.57), Vector3(0.105, 0.22, 0.12), frame)
+	_box("PistolMagazineBase", Vector3(0.22, -0.515, -0.57), Vector3(0.09, 0.025, 0.105), metal)
+	_box("FrontSight", Vector3(0.22, -0.169, -0.80), Vector3(0.025, 0.025, 0.035), metal)
+	_box("RearSight", Vector3(0.22, -0.169, -0.52), Vector3(0.07, 0.025, 0.035), metal)
+	# Forearms enter frame from both lower corners; hands meet around the grip.
+	_capsule("RightForearm", Vector3(0.39, -0.43, -0.31), 0.075, 0.48, cuff)
+	_capsule("LeftForearm", Vector3(-0.31, -0.47, -0.37), 0.07, 0.42, cuff)
+	_capsule("RightGlove", Vector3(0.245, -0.36, -0.55), 0.075, 0.19, glove)
+	_capsule("LeftSupportGlove", Vector3(0.115, -0.38, -0.70), 0.065, 0.17, glove)

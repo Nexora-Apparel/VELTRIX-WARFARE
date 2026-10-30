@@ -1,75 +1,86 @@
 # VELTRIX WARFARE
 
-An original military first-person shooter built with **Godot 4** and **GDScript**, targeting **Android first** and **PC second**.
+An original Android-first military first-person shooter prototype built with **Godot 4.4.1** and **GDScript**.
 
 > Enter the battlefield. Control the mission. Survive the war.
 
-## Project vision
+## Current implementation
 
-VELTRIX WARFARE is being developed around responsive first-person combat, tactical movement, detailed weapons, immersive military environments, enemy AI and a single-player campaign. Online multiplayer is a planned later-stage feature.
+Committed to the repository:
+
+- First-person CharacterBody3D controller with keyboard/mouse and mobile joystick/touch-look.
+- Walking, sprinting, crouching and jumping.
+- Procedural low-poly rifle and forearm viewmodel attached to the first-person camera.
+- Hitscan rifle with 30-round magazine, 90 reserve rounds, fire cooldown, reload and crosshair/ammo HUD.
+- Three damageable static training targets.
+- Three simple pursuing training bots with close-range attacks and health.
+- Player health component and HUD.
+- Landscape Android orientation and Android export preset.
+- Godot headless import/startup validation workflow.
+- Automated Android debug APK workflow (export pipeline currently being verified).
+
+## Controls
+
+### Android
+- Left side: virtual movement joystick.
+- Right side: drag to look around.
+- FIRE: shoot.
+- RELOAD: refill magazine from reserve.
+- JUMP: jump.
+- RUN: hold to sprint.
+- CROUCH: hold to crouch.
+
+### PC
+- WASD: movement.
+- Mouse: look.
+- Left mouse button: fire.
+- R: reload.
+- Space: jump.
+- Shift: sprint.
+- Ctrl: crouch.
+- Escape: release mouse capture; left click to recapture.
+
+## Project layout
+
+- `project.godot` — project configuration.
+- `scenes/main.tscn` — training environment and gameplay scene.
+- `scripts/player_controller.gd` — first-person movement.
+- `scripts/mobile_controls.gd` — multi-touch mobile controls.
+- `scripts/weapon_controller.gd` — hitscan rifle, ammo and HUD.
+- `scripts/weapon_viewmodel.gd` — procedural rifle and forearms.
+- `scripts/player_health.gd` — player health and HUD.
+- `scripts/training_target.gd` — damageable target component.
+- `scripts/training_bot.gd` — basic pursuit and attack AI.
+- `export_presets.cfg` — Android export preset.
+- `.github/workflows/` — Godot validation and Android debug build workflows.
 
 ## Target platforms
 
 - Android — primary development and testing target.
-- PC — secondary target, planned after the core game is stable.
+- PC — secondary target, to be brought up to parity after the core prototype is stable.
 
-## Planned gameplay
+## Roadmap
 
-- First-person player controller with walking, running, jumping, crouching and sliding.
-- Visible hands and weapon while aiming, with a full-body player model visible when looking down.
-- Weapon firing, reloading, switching and customization.
-- Mobile touch controls designed for Android.
-- Training environment and enemy AI.
-- Single-player campaign and mission progression.
-- Planned multiplayer modes: Team Deathmatch, Free-for-All and Search and Destroy.
+1. Core first-person controller and mobile input — implemented, pending device testing.
+2. Rifle firing, reload and HUD — implemented, pending device testing.
+3. Training targets and basic pursuit bots — implemented, pending gameplay balancing.
+4. First-person body and weapon presentation — basic procedural prototype committed, visual refinement pending.
+5. Android debug APK build and installation test — pipeline verification in progress.
+6. Enemy navigation, cover, ranged combat and difficulty.
+7. Training map environment, sound and animation.
+8. Campaign systems and mission progression.
+9. Multiplayer architecture and modes.
+10. Android optimization, PC compatibility and release preparation.
 
-Features are planned, not all implemented. This repository will track verified implementation status as development progresses.
+## Build and validation
 
-## Development roadmap
+The Godot validation workflow performs a headless editor import and startup smoke test. The Android workflow is intended to export a debug APK and upload it as a GitHub Actions artifact. A successful workflow run and artifact are required before an APK can be considered available.
 
-1. Game foundation and project structure.
-2. First-person controller and movement.
-3. Shooting and weapon systems.
-4. First playable training map.
-5. Enemy AI.
-6. Campaign missions.
-7. Multiplayer architecture and modes.
-8. Android performance and device optimization.
-9. PC compatibility.
-10. Release builds and testing.
+Android export requires Godot 4.4.1 export templates and a compatible Android SDK/JDK toolchain.
 
-## First playable milestone
+## Licensing
 
-The first playable milestone aims to include:
-
-- Controllable first-person soldier.
-- First-person camera and weapon view.
-- One assault rifle with firing and reloading.
-- Mobile touch controls.
-- One training environment.
-- Three basic AI enemies.
-- Basic health and damage systems.
-
-## Technology
-
-- Engine: Godot 4
-- Scripting: GDScript
-- Source control: Git / GitHub
-- Primary target: Android
-
-## Project status
-
-**In development — foundation and first playable prototype stage.**
-
-The repository is being established. Features will only be marked complete after their source files are committed and the relevant functionality has been tested.
-
-## Building
-
-Build instructions will be added after the initial Godot project files and Android export configuration are committed. Android export requires a compatible Godot 4 editor and the configured Android export templates/toolchain.
-
-## Contributions and licensing
-
-This repository is publicly visible, but no open-source licence has been granted. All rights are reserved by the project owner unless separate written permission is provided. Do not assume permission to reuse, redistribute or commercially exploit the code or assets.
+This repository is publicly visible, but no open-source licence has been granted. All rights are reserved by the project owner unless separate written permission is provided.
 
 ---
 

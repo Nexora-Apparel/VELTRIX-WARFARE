@@ -1,0 +1,22 @@
+name: Godot Project Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Import and validate Godot project
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Verify project configuration
+        run: godot --headless --path . --editor --quit
+      - name: Run project startup smoke test
+        run: timeout 20s godot --headless --path . --quit-after 3

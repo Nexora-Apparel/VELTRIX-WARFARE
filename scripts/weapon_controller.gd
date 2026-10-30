@@ -35,7 +35,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	fire_cooldown = maxf(0.0, fire_cooldown - delta)
 	if mobile_controls != null:
-		if mobile_controls.consume_fire():
+		if mobile_controls.consume_fire() or mobile_controls.is_firing():
 			fire_weapon()
 		if mobile_controls.consume_reload():
 			reload_weapon()

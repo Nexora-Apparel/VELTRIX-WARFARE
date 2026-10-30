@@ -1,0 +1,61 @@
+name: Android Debug APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "project.godot"
+      - "export_presets.cfg"
+      - "scenes/**"
+      - "scripts/**"
+      - ".github/workflows/android-debug.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  android-debug:
+    name: Build Android debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Export Android APK
+        uses: firebelley/godot-export@v8.0.0
+        with:
+          godot_executable_download_url: https://downloads.tuxfamily.org/godotengine/4.4.1/Godot_v4.4.1-stable_linux.x86_64.zip
+          godot_export_templates_download_url: https://downloads.tuxfamily.org/godotengine/4.4.1/Godot_v4.4.1-stable_export_templates.tpz
+          relative_project_path: ./
+          presets_to_export: Android
+          export_debug: true
+          archive_output: false
+          verbose: true
+
+      - name: Verify APK output
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="$(find . -type f -name 'veltrix-warfare-debug.apk' -size +1M -print -quit)"
+          test -n "$APK"
+          mkdir -p dist
+          cp "$APK" dist/veltrix-warfare-android-debug.apk
+          sha256sum dist/veltrix-warfare-android-debug.apk
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: veltrix-warfare-android-debug
+          path: dist/veltrix-warfare-android-debug.apk
+          if-no-files-found: error
+          retention-days: 14

@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://scripts/mobile_controls.gd" id="2_mobile"]
 [ext_resource type="Script" path="res://scripts/weapon_controller.gd" id="3_weapon"]
 [ext_resource type="Script" path="res://scripts/training_target.gd" id="4_target"]
+[ext_resource type="Script" path="res://scripts/player_health.gd" id="5_health"]
 
 [sub_resource type="Environment" id="Environment_world"]
 background_mode = 1
@@ -52,6 +53,9 @@ shape = SubResource("BoxShape_floor")
 [node name="Player" type="CharacterBody3D" parent="."]
 position = Vector3(0, 1, 4)
 script = ExtResource("1_player")
+
+[node name="PlayerHealth" type="Node" parent="Player"]
+script = ExtResource("5_health")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 shape = SubResource("CapsuleShape_player")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3]
+[gd_scene load_steps=21 format=3]
 
 [ext_resource type="Script" path="res://scripts/player_controller.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/mobile_controls.gd" id="2_mobile"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/player_health.gd" id="5_health"]
 [ext_resource type="Script" path="res://scripts/training_bot.gd" id="6_bot"]
 [ext_resource type="Script" path="res://scripts/weapon_viewmodel.gd" id="7_viewmodel"]
+[ext_resource type="Script" path="res://scripts/training_arena.gd" id="8_arena"]
 
 [sub_resource type="Environment" id="Environment_world"]
 background_mode = 1
@@ -60,6 +61,9 @@ albedo_color = Color(0.055, 0.065, 0.06, 1)
 roughness = 0.9
 
 [node name="Main" type="Node3D"]
+
+[node name="TrainingArena" type="Node3D" parent="."]
+script = ExtResource("8_arena")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_world")

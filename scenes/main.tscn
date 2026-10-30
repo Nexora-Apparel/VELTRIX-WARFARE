@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/player_controller.gd" id="1_player"]
+[ext_resource type="Script" path="res://scripts/mobile_controls.gd" id="2_mobile"]
 
 [sub_resource type="Environment" id="Environment_world"]
 background_mode = 1
@@ -51,3 +52,9 @@ position = Vector3(0, 1.55, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Player/CameraPivot"]
 current = true
+
+[node name="MobileControls" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="TouchControls" type="Node2D" parent="MobileControls"]
+script = ExtResource("2_mobile")

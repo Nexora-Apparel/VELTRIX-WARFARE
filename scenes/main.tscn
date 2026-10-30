@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scripts/player_controller.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/mobile_controls.gd" id="2_mobile"]
 [ext_resource type="Script" path="res://scripts/weapon_controller.gd" id="3_weapon"]
 [ext_resource type="Script" path="res://scripts/training_target.gd" id="4_target"]
 [ext_resource type="Script" path="res://scripts/player_health.gd" id="5_health"]
+[ext_resource type="Script" path="res://scripts/training_bot.gd" id="6_bot"]
 
 [sub_resource type="Environment" id="Environment_world"]
 background_mode = 1
@@ -30,6 +31,14 @@ height = 1.1
 [sub_resource type="SphereShape3D" id="SphereShape_target"]
 radius = 0.55
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_bot"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_bot"]
+radius = 0.4
+height = 1.8
+
 [node name="Main" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -53,6 +62,7 @@ shape = SubResource("BoxShape_floor")
 [node name="Player" type="CharacterBody3D" parent="."]
 position = Vector3(0, 1, 4)
 script = ExtResource("1_player")
+groups = ["player"]
 
 [node name="PlayerHealth" type="Node" parent="Player"]
 script = ExtResource("5_health")
@@ -104,3 +114,33 @@ mesh = SubResource("SphereMesh_target")
 
 [node name="Collision" type="CollisionShape3D" parent="TargetRight"]
 shape = SubResource("SphereShape_target")
+
+[node name="BotAlpha" type="CharacterBody3D" parent="."]
+position = Vector3(-6, 0.9, -3)
+script = ExtResource("6_bot")
+
+[node name="Mesh" type="MeshInstance3D" parent="BotAlpha"]
+mesh = SubResource("CapsuleMesh_bot")
+
+[node name="Collision" type="CollisionShape3D" parent="BotAlpha"]
+shape = SubResource("CapsuleShape_bot")
+
+[node name="BotBravo" type="CharacterBody3D" parent="."]
+position = Vector3(6, 0.9, -5)
+script = ExtResource("6_bot")
+
+[node name="Mesh" type="MeshInstance3D" parent="BotBravo"]
+mesh = SubResource("CapsuleMesh_bot")
+
+[node name="Collision" type="CollisionShape3D" parent="BotBravo"]
+shape = SubResource("CapsuleShape_bot")
+
+[node name="BotCharlie" type="CharacterBody3D" parent="."]
+position = Vector3(0, 0.9, -14)
+script = ExtResource("6_bot")
+
+[node name="Mesh" type="MeshInstance3D" parent="BotCharlie"]
+mesh = SubResource("CapsuleMesh_bot")
+
+[node name="Collision" type="CollisionShape3D" parent="BotCharlie"]
+shape = SubResource("CapsuleShape_bot")

@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/player_controller.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/mobile_controls.gd" id="2_mobile"]
+[ext_resource type="Script" path="res://scripts/weapon_controller.gd" id="3_weapon"]
 
 [sub_resource type="Environment" id="Environment_world"]
 background_mode = 1
@@ -52,6 +53,9 @@ position = Vector3(0, 1.55, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Player/CameraPivot"]
 current = true
+
+[node name="WeaponController" type="Node" parent="Player/CameraPivot/Camera3D"]
+script = ExtResource("3_weapon")
 
 [node name="MobileControls" type="CanvasLayer" parent="."]
 layer = 10

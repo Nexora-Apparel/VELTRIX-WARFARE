@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scripts/training_bot.gd" id="6_bot"]
 [ext_resource type="Script" path="res://scripts/weapon_viewmodel.gd" id="7_viewmodel"]
 [ext_resource type="Script" path="res://scripts/training_arena.gd" id="8_arena"]
+[ext_resource type="Script" path="res://scripts/soldier_visual.gd" id="9_soldier"]
 
 [sub_resource type="Environment" id="Environment_world"]
 background_mode = 1
@@ -87,6 +88,9 @@ shape = SubResource("BoxShape_floor")
 position = Vector3(0, 1, 4)
 script = ExtResource("1_player")
 groups = ["player"]
+
+[node name="SoldierVisual" type="Node3D" parent="Player"]
+script = ExtResource("9_soldier")
 
 [node name="PlayerHealth" type="Node" parent="Player"]
 script = ExtResource("5_health")

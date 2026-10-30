@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/player_controller.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/mobile_controls.gd" id="2_mobile"]
 [ext_resource type="Script" path="res://scripts/weapon_controller.gd" id="3_weapon"]
+[ext_resource type="Script" path="res://scripts/training_target.gd" id="4_target"]
 
 [sub_resource type="Environment" id="Environment_world"]
 background_mode = 1
@@ -20,6 +21,13 @@ size = Vector3(30, 0.3, 30)
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_player"]
 radius = 0.35
 height = 1.8
+
+[sub_resource type="SphereMesh" id="SphereMesh_target"]
+radius = 0.55
+height = 1.1
+
+[sub_resource type="SphereShape3D" id="SphereShape_target"]
+radius = 0.55
 
 [node name="Main" type="Node3D"]
 
@@ -62,3 +70,33 @@ layer = 10
 
 [node name="TouchControls" type="Node2D" parent="MobileControls"]
 script = ExtResource("2_mobile")
+
+[node name="TargetLeft" type="StaticBody3D" parent="."]
+position = Vector3(-4, 1, -8)
+script = ExtResource("4_target")
+
+[node name="Mesh" type="MeshInstance3D" parent="TargetLeft"]
+mesh = SubResource("SphereMesh_target")
+
+[node name="Collision" type="CollisionShape3D" parent="TargetLeft"]
+shape = SubResource("SphereShape_target")
+
+[node name="TargetCenter" type="StaticBody3D" parent="."]
+position = Vector3(0, 1, -10)
+script = ExtResource("4_target")
+
+[node name="Mesh" type="MeshInstance3D" parent="TargetCenter"]
+mesh = SubResource("SphereMesh_target")
+
+[node name="Collision" type="CollisionShape3D" parent="TargetCenter"]
+shape = SubResource("SphereShape_target")
+
+[node name="TargetRight" type="StaticBody3D" parent="."]
+position = Vector3(4, 1, -8)
+script = ExtResource("4_target")
+
+[node name="Mesh" type="MeshInstance3D" parent="TargetRight"]
+mesh = SubResource("SphereMesh_target")
+
+[node name="Collision" type="CollisionShape3D" parent="TargetRight"]
+shape = SubResource("SphereShape_target")

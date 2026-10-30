@@ -6,6 +6,8 @@ class_name VeltrixMobileControls
 
 var _move_touch := -1
 var _look_touch := -1
+var _sprint_touch := -1
+var _crouch_touch := -1
 var _move_vector := Vector2.ZERO
 var _look_delta := Vector2.ZERO
 var _jump_requested := false
@@ -36,8 +38,10 @@ func _input(event: InputEvent) -> void:
 			elif _inside_button(event.position, "fire"):
 				_fire_requested = true
 			elif _inside_button(event.position, "sprint"):
+				_sprint_touch = event.index
 				_sprint = true
 			elif _inside_button(event.position, "crouch"):
+				_crouch_touch = event.index
 				_crouch = true
 			elif event.position.x < _viewport_size.x * 0.48 and _move_touch == -1:
 				_move_touch = event.index
@@ -50,9 +54,11 @@ func _input(event: InputEvent) -> void:
 				_move_vector = Vector2.ZERO
 			elif event.index == _look_touch:
 				_look_touch = -1
-			if _inside_button(event.position, "sprint"):
+			elif event.index == _sprint_touch:
+				_sprint_touch = -1
 				_sprint = false
-			if _inside_button(event.position, "crouch"):
+			elif event.index == _crouch_touch:
+				_crouch_touch = -1
 				_crouch = false
 			queue_redraw()
 	elif event is InputEventScreenDrag:

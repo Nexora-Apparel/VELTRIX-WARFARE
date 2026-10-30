@@ -9,6 +9,7 @@ var _look_touch := -1
 var _move_vector := Vector2.ZERO
 var _look_delta := Vector2.ZERO
 var _jump_requested := false
+var _fire_requested := false
 var _sprint := false
 var _crouch := false
 var _viewport_size := Vector2.ZERO
@@ -32,6 +33,8 @@ func _input(event: InputEvent) -> void:
 		if event.pressed:
 			if _inside_button(event.position, "jump"):
 				_jump_requested = true
+			elif _inside_button(event.position, "fire"):
+				_fire_requested = true
 			elif _inside_button(event.position, "sprint"):
 				_sprint = true
 			elif _inside_button(event.position, "crouch"):
@@ -70,6 +73,8 @@ func _inside_button(position: Vector2, which: String) -> bool:
 	match which:
 		"jump":
 			return position.distance_to(Vector2(w - 92.0, h - 250.0)) < 58.0
+		"fire":
+			return position.distance_to(Vector2(w - 92.0, h - 380.0)) < 52.0
 		"sprint":
 			return position.distance_to(Vector2(w - 215.0, h - 125.0)) < 52.0
 		"crouch":
@@ -89,6 +94,11 @@ func consume_jump() -> bool:
 	_jump_requested = false
 	return result
 
+func consume_fire() -> bool:
+	var result := _fire_requested
+	_fire_requested = false
+	return result
+
 func is_sprinting() -> bool:
 	return _sprint
 
@@ -102,6 +112,7 @@ func _draw() -> void:
 	draw_circle(_joystick_center, _joystick_radius, Color(0.1, 0.14, 0.2, 0.28))
 	draw_arc(_joystick_center, _joystick_radius, 0.0, TAU, 48, Color(0.8, 0.86, 0.95, 0.55), 3.0)
 	draw_circle(knob, 36.0, Color(0.75, 0.82, 0.92, 0.52))
+	_draw_button(Vector2(_viewport_size.x - 92.0, _viewport_size.y - 380.0), "FIRE", Color(0.9, 0.25, 0.2, 0.62))
 	_draw_button(Vector2(_viewport_size.x - 92.0, _viewport_size.y - 250.0), "JUMP", Color(0.2, 0.65, 0.95, 0.55))
 	_draw_button(Vector2(_viewport_size.x - 215.0, _viewport_size.y - 125.0), "RUN", Color(0.2, 0.8, 0.45, 0.55))
 	_draw_button(Vector2(_viewport_size.x - 92.0, _viewport_size.y - 125.0), "CROUCH", Color(0.85, 0.65, 0.2, 0.55))

@@ -15,7 +15,7 @@ class_name VeltrixPlayerController
 @export var crouching_camera_height: float = 1.05
 
 @onready var camera_pivot: Node3D = $CameraPivot
-@onready var mobile_controls: VeltrixMobileControls = get_node_or_null("../MobileControls")
+@onready var mobile_controls: VeltrixMobileControls = get_node_or_null("../MobileControls/TouchControls")
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 

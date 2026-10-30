@@ -15,13 +15,14 @@ var magazine_ammo: int
 var reserve_ammo: int
 var fire_cooldown: float = 0.0
 var hud_label: Label
+var player_body: CollisionObject3D
 var mobile_controls: VeltrixMobileControls
 
 func _ready() -> void:
 	magazine_ammo = magazine_capacity
 	reserve_ammo = starting_reserve
-	var player := camera.get_parent().get_parent()
-	mobile_controls = player.get_node_or_null("../MobileControls/TouchControls")
+	player_body = camera.get_parent().get_parent() as CollisionObject3D
+	mobile_controls = player_body.get_node_or_null("../MobileControls/TouchControls")
 	_create_hud()
 	_update_hud()
 
@@ -44,7 +45,7 @@ func fire_weapon() -> void:
 	var origin := camera.global_position
 	var destination := origin + (-camera.global_transform.basis.z * range_meters)
 	var query := PhysicsRayQueryParameters3D.create(origin, destination)
-	query.exclude = [camera.get_parent().get_parent().get_rid()]
+	query.exclude = [player_body.get_rid()]
 	var hit := camera.get_world_3d().direct_space_state.intersect_ray(query)
 	if not hit.is_empty():
 		var target: Object = hit.get("collider")

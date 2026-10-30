@@ -1,13 +1,15 @@
 extends Node
 class_name VeltrixWeaponController
 
-## Prototype hitscan rifle: 30-round magazine, 90 reserve, 650 RPM.
+## Hitscan assault rifle with mobile auto-fire, recoil, hit confirmation and ammo HUD.
 
 @export var damage: float = 25.0
 @export var range_meters: float = 120.0
 @export var rounds_per_minute: float = 650.0
 @export var magazine_capacity: int = 30
 @export var starting_reserve: int = 90
+@export var recoil_per_shot: float = 0.018
+@export var recoil_recovery_speed: float = 8.0
 
 @onready var camera: Camera3D = get_parent()
 
@@ -15,6 +17,8 @@ var magazine_ammo: int
 var reserve_ammo: int
 var fire_cooldown: float = 0.0
 var hud_label: Label
+var hit_marker: Label
+var hit_marker_timer: float = 0.0
 var player_body: CollisionObject3D
 var mobile_controls: VeltrixMobileControls
 
@@ -34,6 +38,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	fire_cooldown = maxf(0.0, fire_cooldown - delta)
+	hit_marker_timer = maxf(0.0, hit_marker_timer - delta)
+	if hit_marker_timer <= 0.0 and is_instance_valid(hit_marker):
+		hit_marker.visible = false
+	camera.rotation.x = move_toward(camera.rotation.x, 0.0, recoil_recovery_speed * delta)
 	if mobile_controls != null:
 		if mobile_controls.consume_fire() or mobile_controls.is_firing():
 			fire_weapon()
@@ -45,6 +53,7 @@ func fire_weapon() -> void:
 		return
 	magazine_ammo -= 1
 	fire_cooldown = 60.0 / rounds_per_minute
+	camera.rotation.x -= recoil_per_shot
 	var origin := camera.global_position
 	var destination := origin + (-camera.global_transform.basis.z * range_meters)
 	var query := PhysicsRayQueryParameters3D.create(origin, destination)
@@ -54,7 +63,13 @@ func fire_weapon() -> void:
 		var target: Object = hit.get("collider")
 		if target != null and target.has_method("take_damage"):
 			target.take_damage(damage)
+			_show_hit_marker()
 	_update_hud()
+
+func _show_hit_marker() -> void:
+	if is_instance_valid(hit_marker):
+		hit_marker.visible = true
+		hit_marker_timer = 0.16
 
 func reload_weapon() -> void:
 	if magazine_ammo >= magazine_capacity or reserve_ammo <= 0:
@@ -86,6 +101,14 @@ func _create_hud() -> void:
 	crosshair.position = Vector2(-8.0, -20.0)
 	crosshair.add_theme_font_size_override("font_size", 30)
 	layer.add_child(crosshair)
+
+	hit_marker = Label.new()
+	hit_marker.text = "×"
+	hit_marker.set_anchors_preset(Control.PRESET_CENTER)
+	hit_marker.position = Vector2(-8.0, -38.0)
+	hit_marker.add_theme_font_size_override("font_size", 28)
+	hit_marker.visible = false
+	layer.add_child(hit_marker)
 
 func _update_hud() -> void:
 	if is_instance_valid(hud_label):

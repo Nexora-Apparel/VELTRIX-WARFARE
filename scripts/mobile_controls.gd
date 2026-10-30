@@ -6,6 +6,7 @@ class_name VeltrixMobileControls
 
 var _move_touch := -1
 var _look_touch := -1
+var _fire_touch := -1
 var _sprint_touch := -1
 var _crouch_touch := -1
 var _move_vector := Vector2.ZERO
@@ -37,6 +38,7 @@ func _input(event: InputEvent) -> void:
 			if _inside_button(event.position, "jump"):
 				_jump_requested = true
 			elif _inside_button(event.position, "fire"):
+				_fire_touch = event.index
 				_fire_requested = true
 			elif _inside_button(event.position, "reload"):
 				_reload_requested = true
@@ -57,6 +59,8 @@ func _input(event: InputEvent) -> void:
 				_move_vector = Vector2.ZERO
 			elif event.index == _look_touch:
 				_look_touch = -1
+			elif event.index == _fire_touch:
+				_fire_touch = -1
 			elif event.index == _sprint_touch:
 				_sprint_touch = -1
 				_sprint = false
@@ -109,6 +113,9 @@ func consume_fire() -> bool:
 	var result := _fire_requested
 	_fire_requested = false
 	return result
+
+func is_firing() -> bool:
+	return _fire_touch != -1
 
 func consume_reload() -> bool:
 	var result := _reload_requested
